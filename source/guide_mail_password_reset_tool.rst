@@ -48,7 +48,7 @@ Clone the repository
 
 ::
 
-  [isabell@philae ~]$ git clone https://github.com/PeterNerlich/uberspace_mail_pw_reset.git mail_pw_reset
+  [isabell@stardust ~]$ git clone https://github.com/PeterNerlich/uberspace_mail_pw_reset.git mail_pw_reset
 
 This will download the repository to a directory named `mail_pw_reset`. Adjust as you see fit, but this will be used throughout this guide.
 
@@ -57,10 +57,10 @@ Create virtual environment and install dependencies
 
 ::
 
-  [isabell@philae ~]$ cd mail_pw_reset
-  [isabell@philae mail_pw_reset]$ python3.9 -m venv .
-  [isabell@philae mail_pw_reset]$ source bin/activate
-  (mail_pw_reset) [isabell@philae mail_pw_reset]$ CPATH=/usr/include/python3.9 pip install -r requirements.txt
+  [isabell@stardust ~]$ cd mail_pw_reset
+  [isabell@stardust mail_pw_reset]$ python3.9 -m venv .
+  [isabell@stardust mail_pw_reset]$ source bin/activate
+  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ CPATH=/usr/include/python3.9 pip install -r requirements.txt
   Collecting Flask
     Using cached Flask-2.0.1-py3-none-any.whl (94 kB)
   Collecting flask_sqlalchemy
@@ -81,7 +81,7 @@ Create the `.env` file from the `env.example`: `cp env.example .env` and adjust 
 
 ::
 
-  (mail_pw_reset) [isabell@philae mail_pw_reset]$ cat .env
+  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ cat .env
   cat env.example 
   DATABASE_URI=sqlite:///uberspace_mail_pw_reset.sqlite3
   
@@ -101,7 +101,7 @@ Create the `.env` file from the `env.example`: `cp env.example .env` and adjust 
   
   LANGUAGES=en,de
   DEFAULT_LOCALE=en
-  (mail_pw_reset) [isabell@philae mail_pw_reset]$ 
+  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ 
 
 Obviously, replace ``[INSERT_SECRET_KEY_HERE]`` with a good string. You don't have to remember it, so you can be lazy and, for example, `generate some UUID https://duckduckgo.com/?q=uuid`_ to use for that.
 
@@ -117,7 +117,7 @@ UWSGI ist the server we'll use to run the python/flask application. For that, we
 
 ::
 
-  (mail_pw_reset) [isabell@philae mail_pw_reset]$ cat uwsgi.ini 
+  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ cat uwsgi.ini 
   [uwsgi]
   mount = /mail_reset=main:app
   manage-script-name = true
@@ -127,7 +127,7 @@ UWSGI ist the server we'll use to run the python/flask application. For that, we
   http-socket = :1024
   chmod-socket = 660
   vacuum = true
-  (mail_pw_reset) [isabell@philae mail_pw_reset]$ 
+  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ 
 
 In the value for ``mount``, use the same prefix as for ``APP_ROOT`` in the ``.env`` file. If you don't want to have any prefix, use the line ``module = main:app`` instead of the lines starting with ``mount`` and ``manage-script-name``.
 
@@ -138,11 +138,11 @@ Lastly, let's define it as a service so it can be automatically managed by :manu
 
 ::
 
-  (mail_pw_reset) [isabell@philae mail_pw_reset]$ cat ~/etc/services.d/uberspace_mail_pw_reset_flask.ini
+  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ cat ~/etc/services.d/uberspace_mail_pw_reset_flask.ini
   [program:uberspace_mail_pw_reset_flask]
   directory=/home/isabell/mail_pw_reset
   command=/home/isabell/mail_pw_reset/bin/uwsgi /home/isabell/mail_pw_reset/uwsgi.ini
-  (mail_pw_reset) [isabell@philae mail_pw_reset]$ 
+  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ 
 
 
 Finally, it's time to turn on the lights:
