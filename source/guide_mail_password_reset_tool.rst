@@ -50,7 +50,7 @@ Clone the repository
 
   [isabell@stardust ~]$ git clone https://github.com/PeterNerlich/uberspace_mail_pw_reset.git mail_pw_reset
 
-This will download the repository to a directory named `mail_pw_reset`. Adjust as you see fit, but this will be used throughout this guide.
+This will download the repository to a directory named ``mail_pw_reset``. Adjust as you see fit, but this will be used throughout this guide.
 
 Create virtual environment and install dependencies
 ---------------------------------------------------
@@ -72,12 +72,12 @@ Create virtual environment and install dependencies
   You should consider upgrading via the '/home/masonbee/mail_pw_reset/test/bin/python3.9 -m pip install --upgrade pip' command.
   (mail_pw_reset) [isabell@stardust mail_pw_reset]$ 
 
-You can ignore that last warning about `pip` not being up to date.
+You can ignore that last warning about ``pip`` not being up to date.
 
 Environment variables
 ---------------------
 
-Create the `.env` file from the `env.example`: `cp env.example .env` and adjust the values to your needs. For example:
+Create the ``.env`` file from the ``env.example``: ``cp env.example .env`` and adjust the values to your needs. For example:
 
 ::
 
