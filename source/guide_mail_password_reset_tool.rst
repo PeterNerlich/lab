@@ -74,6 +74,13 @@ Create virtual environment and install dependencies
 
 You can ignore that last warning about ``pip`` not being up to date.
 
+Use ``deactivate`` to leave the virtual environment:
+
+::
+
+  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ deactivate
+  [isabell@stardust mail_pw_reset]$ 
+
 Environment variables
 ---------------------
 
@@ -81,7 +88,7 @@ Create the ``.env`` file from the ``env.example``: ``cp env.example .env`` and a
 
 ::
 
-  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ cat .env
+  [isabell@stardust mail_pw_reset]$ cat .env
   cat env.example 
   DATABASE_URI=sqlite:///uberspace_mail_pw_reset.sqlite3
   
@@ -101,7 +108,7 @@ Create the ``.env`` file from the ``env.example``: ``cp env.example .env`` and a
   
   LANGUAGES=en,de
   DEFAULT_LOCALE=en
-  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ 
+  [isabell@stardust mail_pw_reset]$ 
 
 Obviously, replace ``[INSERT_SECRET_KEY_HERE]`` with a good string. You don't have to remember it, so you can be lazy and, for example, `generate some UUID https://duckduckgo.com/?q=uuid`_ to use for that.
 
@@ -117,7 +124,7 @@ UWSGI ist the server we'll use to run the python/flask application. For that, we
 
 ::
 
-  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ cat uwsgi.ini 
+  [isabell@stardust mail_pw_reset]$ cat uwsgi.ini 
   [uwsgi]
   mount = /mail_reset=main:app
   manage-script-name = true
@@ -127,9 +134,23 @@ UWSGI ist the server we'll use to run the python/flask application. For that, we
   http-socket = :1024
   chmod-socket = 660
   vacuum = true
-  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ 
+  [isabell@stardust mail_pw_reset]$ 
 
 In the value for ``mount``, use the same prefix as for ``APP_ROOT`` in the ``.env`` file. If you don't want to have any prefix, use the line ``module = main:app`` instead of the lines starting with ``mount`` and ``manage-script-name``.
+
+Set up nginx
+------------
+
+.. include:: includes/web_backend.rst
+
+In our example, it looks like this:
+
+::
+
+  [isabell@stardust mail_pw_reset]$ uberspace web backend set /mail_reset --http --port 1024
+  [isabell@stardust mail_pw_reset]$ 
+
+Remember to double-check the prefix, and that the port is the same as the socket specified in ``uwsgi.ini``.
 
 Create the service
 ------------------
@@ -138,11 +159,11 @@ Lastly, let's define it as a service so it can be automatically managed by :manu
 
 ::
 
-  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ cat ~/etc/services.d/uberspace_mail_pw_reset_flask.ini
+  [isabell@stardust mail_pw_reset]$ cat ~/etc/services.d/uberspace_mail_pw_reset_flask.ini
   [program:uberspace_mail_pw_reset_flask]
   directory=/home/isabell/mail_pw_reset
   command=/home/isabell/mail_pw_reset/bin/uwsgi /home/isabell/mail_pw_reset/uwsgi.ini
-  (mail_pw_reset) [isabell@stardust mail_pw_reset]$ 
+  [isabell@stardust mail_pw_reset]$ 
 
 
 Finally, it's time to turn on the lights:
